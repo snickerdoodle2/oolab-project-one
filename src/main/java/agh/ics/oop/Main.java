@@ -1,9 +1,9 @@
 package agh.ics.oop;
 
-import agh.ics.oop.utility.Vector2D;
+import agh.ics.oop.utility.Directions;
 
 public class Main {
     public static void main(String[] args){
-        System.out.println(new Vector2D(2, 1));
+        System.out.println(Directions.randomDirection());
     }
 }
