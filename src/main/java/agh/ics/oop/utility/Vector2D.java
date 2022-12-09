@@ -36,4 +36,15 @@ public class Vector2D {
         return new Vector2D(this.x-other.x,this.y-other.y);
     }
 
+    public boolean precedes(Vector2D other){
+        if (this.x > other.x) return false;
+        if (this.y > other.y) return false;
+        return true;
+    }
+
+    public boolean follows(Vector2D other){
+        if (this.x < other.x) return false;
+        if (this.y < other.y) return false;
+        return true;
+    }
 }
