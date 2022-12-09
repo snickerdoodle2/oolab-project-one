@@ -1,9 +1,12 @@
 package agh.ics.oop;
 
+import agh.ics.oop.Engine.SimulationEngine;
+import agh.ics.oop.Maps.Earth;
 import agh.ics.oop.utility.Directions;
 
 public class Main {
     public static void main(String[] args){
-        System.out.println(Directions.randomDirection());
+        SimulationEngine engine = new SimulationEngine(new Earth(10, 30), 1000);
+        engine.run();
     }
 }
