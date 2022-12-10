@@ -1,6 +1,5 @@
 package agh.ics.oop.Maps;
 
-import agh.ics.oop.Plants.PlantGenerator;
 import agh.ics.oop.Plants.PlantGeneratorsList;
 
 public class Earth extends WorldMap {
