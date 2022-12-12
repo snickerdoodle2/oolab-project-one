@@ -27,7 +27,7 @@ public abstract class WorldMap {
         this.width = width;
         this.height = height;
         this.plantGenerator = switch (plantGenerator) {
-            case EQUATOR -> new Equator(this, 1);
+            case EQUATOR -> new Equator(this, 5 );
             case TOXIC -> null;
         };
     }

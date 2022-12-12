@@ -1,5 +1,7 @@
 package agh.ics.oop.Gui;
 
+import agh.ics.oop.Gui.Legend.Legend;
+import agh.ics.oop.Gui.Legend.LegendItem;
 import agh.ics.oop.Maps.Earth;
 import agh.ics.oop.Maps.WorldMap;
 import agh.ics.oop.Plants.PlantGeneratorsList;
@@ -14,15 +16,24 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class App extends Application {
-    private int appWidth = 600;
-    private int appHeight = 600;
+    private int appWidth = 1200;
+    private int appHeight = 800;
+
+//    TODO: ADD LEGEND ITEMS
+    private LegendItem[] legendItems = {
+            new LegendItem(new Label("icon"), "text"),
+            new LegendItem(new Label("icon123"), "text1")
+};
+
+    private static Legend legend = new Legend();
+
     public void start(Stage primaryStage){
-        WorldMap equator = new Earth(100, 100, PlantGeneratorsList.EQUATOR);
+        WorldMap equator = new Earth(50, 50, PlantGeneratorsList.EQUATOR);
         equator.generatePlant();
         GridPane mapContent = equator.toGridPane(550);
         mapContent.setStyle("-fx-border-color: black; -fx-border-width: 2px");
 
-        HBox mainContainer = new HBox(mapContent);
+        HBox mainContainer = new HBox(legend.generateLegend(legendItems), mapContent);
         mainContainer.setAlignment(Pos.CENTER);
 
         VBox centerContainer = new VBox(mainContainer);
@@ -33,6 +44,5 @@ public class App extends Application {
 
         primaryStage.setScene(scene);
         primaryStage.show();
-
     }
 }
