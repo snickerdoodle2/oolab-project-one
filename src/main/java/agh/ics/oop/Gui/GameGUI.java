@@ -1,15 +1,22 @@
 package agh.ics.oop.Gui;
 
 import agh.ics.oop.Engine.SimulationEngine;
+
 import agh.ics.oop.Gui.Legend.Legend;
 import agh.ics.oop.Gui.Legend.LegendItem;
+
 import agh.ics.oop.Maps.Earth;
 import agh.ics.oop.Maps.WorldMap;
+
 import agh.ics.oop.Plants.PlantGeneratorsList;
+
 import agh.ics.oop.Utility.IMapObserver;
 import agh.ics.oop.Utility.Options;
+
 import javafx.application.Platform;
+
 import javafx.geometry.Pos;
+
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -18,24 +25,24 @@ import javafx.scene.layout.VBox;
 public class GameGUI implements IMapObserver {
     Options gameOptions;
 
-    private static int windowsHeight = 800;
-    private static int windowsWidth = 1200;
+    private static final int windowsHeight = 800;
+    private static final int windowsWidth = 1200;
 
     private static Legend legendGenerator = new Legend();
 
-    private VBox mapPane = new VBox();
+    private final VBox mapPane = new VBox();
 
     private Thread engineThread;
 
     private WorldMap map;
 
 //    TODO: LEGENDA
-    private LegendItem[] legendItems = {
+    private final LegendItem[] legendItems = {
             new LegendItem(new Label("1"), "jeden"),
             new LegendItem(new Label("2"), "dwa"),
             new LegendItem(new Label("3"), "trzy"),
             new LegendItem(new Label("4"), "cztery"),
-    };;
+    };
 
     public GameGUI(Options gameOptions) {
         this.gameOptions = gameOptions;
@@ -64,7 +71,7 @@ public class GameGUI implements IMapObserver {
         container.getChildren().setAll(leftColumn, mapPane, rightColumn);
         container.setSpacing(24);
 
-        engineThread = new Thread(new SimulationEngine(map, 1000, this));
+        engineThread = new Thread(new SimulationEngine(map, 250, this));
 
         engineThread.start();
 

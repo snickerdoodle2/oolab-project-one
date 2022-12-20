@@ -1,9 +1,9 @@
 package agh.ics.oop.Engine;
 
+import agh.ics.oop.Animal.Animal;
+import agh.ics.oop.Animal.Obedient;
 import agh.ics.oop.Maps.WorldMap;
 import agh.ics.oop.Utility.IMapObserver;
-
-import java.time.LocalDateTime;
 
 public class SimulationEngine implements Runnable {
     private WorldMap map;
@@ -17,10 +17,12 @@ public class SimulationEngine implements Runnable {
     }
 
     public void run() {
+        Animal animal = new Obedient(50, 50, map);
+        map.addAnimal(animal);
         while (true){
             try {
-                map.generatePlant();
-
+//                map.generatePlant();
+                animal.move();
                 observer.rerender();
                 Thread.sleep(this.moveDelay);
             } catch (InterruptedException e){

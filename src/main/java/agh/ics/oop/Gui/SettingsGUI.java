@@ -10,15 +10,12 @@ public class SettingsGUI extends Application {
 
 
     public void start(Stage primaryStage){
-        for (int i =0; i < 2; i++ ){
-            Stage tmpStage = new Stage();
-            GameGUI tmp = new GameGUI(new Options());
-            tmpStage.setScene(tmp.getScene());
-            tmpStage.setOnHiding((event) -> {
-                System.out.println("KONIEC");
-                tmp.stageEnded();
-            });
-            tmpStage.show();
-        }
+        Stage tmpStage = new Stage();
+        GameGUI tmp = new GameGUI(new Options());
+        tmpStage.setScene(tmp.getScene());
+        tmpStage.setOnHiding((event) -> {
+            tmp.stageEnded();
+        });
+        tmpStage.show();
     }
 }

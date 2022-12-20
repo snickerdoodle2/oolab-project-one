@@ -1,22 +1,32 @@
 package agh.ics.oop.Utility;
 
+import agh.ics.oop.Animal.AnimalTypesList;
+import agh.ics.oop.Genes.GeneTypesList;
 import agh.ics.oop.Maps.MapTypeList;
 import agh.ics.oop.Plants.PlantGeneratorsList;
 
 public class Options {
 //    MAP OPTIONS
-    private int mapHeight;
-    private int mapWidth;
-    private MapTypeList mapType;
+    public int mapHeight;
+    public int mapWidth;
+    public MapTypeList mapType;
 
 //    PLANTS OPTIONS
-    private PlantGeneratorsList plantType;
-    private int initialPlants;
-    private int plantsPerDay;
-    private int energyPerPlant;
+    public PlantGeneratorsList plantType;
+    public int initialPlants;
+    public int plantsPerDay;
+    public int energyPerPlant;
 
-//    ANIMAL OPTION
+//    ANIMALS OPTIONS
+    public AnimalTypesList animalType;
+    public int minToBreed;
+    public int initialAnimals;
+    public int initialEnergy;
+    public int energyToBreed;
 
-
-
+//    GENES OPTIONS
+    public GeneTypesList geneType;
+    public int geneLength;
+    public int minMutations;
+    public int maxMutations;
 }
