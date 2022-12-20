@@ -1,6 +1,6 @@
 package agh.ics.oop.MapElements;
 
-import agh.ics.oop.utility.Vector2D;
+import agh.ics.oop.Utility.Vector2D;
 
 public class Plant implements MapElement{
     private Vector2D position;

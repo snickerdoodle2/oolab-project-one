@@ -1,7 +1,7 @@
 package agh.ics.oop.Plants;
 
 import agh.ics.oop.Maps.WorldMap;
-import agh.ics.oop.utility.Vector2D;
+import agh.ics.oop.Utility.Vector2D;
 
 import java.util.Random;
 

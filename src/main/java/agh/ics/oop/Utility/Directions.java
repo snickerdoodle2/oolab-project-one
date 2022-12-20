@@ -1,4 +1,4 @@
-package agh.ics.oop.utility;
+package agh.ics.oop.Utility;
 
 import java.util.Random;
 
