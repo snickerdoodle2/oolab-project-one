@@ -1,5 +1,6 @@
 package agh.ics.oop.Gui;
 
+import agh.ics.oop.Animal.AnimalTypesList;
 import agh.ics.oop.Engine.SimulationEngine;
 
 import agh.ics.oop.Gui.Legend.Legend;
@@ -57,7 +58,15 @@ public class GameGUI implements IMapObserver {
         return myVBox;
     }
     public Scene getScene() {
-        map = new Earth(30, 30, PlantGeneratorsList.EQUATOR);
+        Options options = new Options();
+        options.initialEnergy = 100;
+        options.geneLength = 20;
+        options.mapHeight = 50;
+        options.mapWidth = 50;
+        options.plantType = PlantGeneratorsList.EQUATOR;
+        options.animalType = AnimalTypesList.OBIDIENT;
+        options.energyPerPlant = 10;
+        map = new Earth(options);
         mapPane.getChildren().setAll(new Label(":)"));
         mapPane.setAlignment(Pos.CENTER);
 

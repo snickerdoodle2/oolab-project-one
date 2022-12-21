@@ -3,6 +3,7 @@ package agh.ics.oop.Animal;
 import agh.ics.oop.Genes.Gene;
 import agh.ics.oop.Maps.WorldMap;
 import agh.ics.oop.Utility.Directions;
+import agh.ics.oop.Utility.Options;
 import agh.ics.oop.Utility.Vector2D;
 
 import java.util.Random;
@@ -13,22 +14,19 @@ public abstract class Animal {
     private final Gene genes;
     private final WorldMap map;
 
-    public Vector2D getPosition() {
-        return position;
-    }
 
     protected int curGeneIndex = 0;
     protected final int geneLength;
 
     private static final Random random = new Random();
 
-    public Animal(int energy, int geneLength, WorldMap map) {
-        this.energy = energy;
+    public Animal(Options options, WorldMap map) {
+        this.energy = options.initialEnergy;
 
         this.map = map;
         this.position = new Vector2D(random.nextInt(map.getWidth()), random.nextInt(map.getHeight()));
 
-        this.geneLength = geneLength;
+        this.geneLength = options.geneLength;
         this.genes = new Gene(geneLength);
     }
 
@@ -37,7 +35,7 @@ public abstract class Animal {
     public void move() {
         int curGene = genes.getGene(this.curGeneIndex);
         nextGene();
-        this.position = this.map.moveAnimal(this.position, Directions.values()[curGene]);
+        this.map.moveAnimal(this, Directions.values()[curGene]);
     }
 
     public void decrementEnergy() {
@@ -47,4 +45,20 @@ public abstract class Animal {
     public boolean isDead() {
         return this.energy == 0;
     }
+    public Vector2D getPosition() {
+        return position;
+    }
+
+    public void setPosition(Vector2D position) {
+        this.position = position;
+    }
+
+    public int getEnergy() {
+        return energy;
+    }
+
+    public void eat(int eatenEnergy) {
+        this.energy += eatenEnergy;
+    }
+
 }

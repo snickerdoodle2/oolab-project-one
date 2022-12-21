@@ -1,11 +1,13 @@
 package agh.ics.oop.Maps;
 
 import agh.ics.oop.Animal.Animal;
+import agh.ics.oop.Animal.AnimalTypesList;
+import agh.ics.oop.Animal.Obedient;
 import agh.ics.oop.MapElements.Plant;
 import agh.ics.oop.Plants.Equator;
 import agh.ics.oop.Plants.PlantGenerator;
-import agh.ics.oop.Plants.PlantGeneratorsList;
 import agh.ics.oop.Utility.Directions;
+import agh.ics.oop.Utility.Options;
 import agh.ics.oop.Utility.Vector2D;
 import javafx.geometry.HPos;
 import javafx.scene.layout.ColumnConstraints;
@@ -13,26 +15,34 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 public abstract class WorldMap {
     protected final int width;
     protected final int height;
     private final PlantGenerator plantGenerator;
+    private final int energyPerPlant;
+
+    private final AnimalTypesList animalType;
+    private final Options options;
 
     private final Map<Vector2D, Plant> plants = new HashMap<>();
 
-    private final Map<Vector2D, Animal> animals = new HashMap<>();
+    private final Map<Vector2D, TreeSet<Animal>> animals = new HashMap<>();
 
-    public WorldMap(int width, int height, PlantGeneratorsList plantGenerator){
-        this.width = width;
-        this.height = height;
-        this.plantGenerator = switch (plantGenerator) {
+
+    public WorldMap(Options options){
+        this.options = options;
+        this.width = options.mapWidth;
+        this.height = options.mapHeight;
+
+        this.animalType = options.animalType;
+        this.plantGenerator = switch (options.plantType) {
             case EQUATOR -> new Equator(this, 5 );
             case TOXIC -> null;
         };
+        this.energyPerPlant = options.energyPerPlant;
     }
 
     public int getWidth() {
@@ -79,7 +89,9 @@ public abstract class WorldMap {
         return this.plants.containsKey(position);
     }
     public boolean animalAt(Vector2D position) {
-        return this.animals.containsKey(position);
+        TreeSet<Animal> tmp = this.animals.get(position);
+        if (tmp == null ) return false;
+        return tmp.size() > 0;
     }
 
     public void generatePlant(){
@@ -89,16 +101,88 @@ public abstract class WorldMap {
 
     protected abstract Vector2D calculateNewPosition(Vector2D position, Directions direction);
 
-    public void addAnimal(Animal animal){
-        animals.put(animal.getPosition(), animal);
+    public void newAnimal(){
+        Animal animal = switch (animalType) {
+            case OBIDIENT -> new Obedient(options, this);
+            case CRAZY -> null;
+        };
+        addAnimal(animal);
     }
 
-    public Vector2D moveAnimal(Vector2D position, Directions direction){
-        Vector2D newPosition = this.calculateNewPosition(position, direction);
-        Animal animal = animals.get(position);
-        animals.remove(position);
-        animals.put(newPosition, animal);
+    private void addAnimal(Animal animal) {
+        TreeSet<Animal> animalsList = animals.get(animal.getPosition());
+        if (animalsList == null) {
+            TreeSet<Animal> newAnimalsList = new TreeSet<Animal>(new Comparator<Animal>() {
+                @Override
+                public int compare(Animal o1, Animal o2) {
+                    int energy1 = o1.getEnergy();
+                    int energy2 = o2.getEnergy();
+                    return Integer.compare(energy1, energy2);
+                }
+            });
 
-        return newPosition;
+            newAnimalsList.add(animal);
+            animals.put(animal.getPosition(), newAnimalsList);
+        } else {
+            animalsList.add(animal);
+        }
+    }
+
+    public void moveAnimal(Animal animal, Directions direction){
+        Vector2D newPosition = this.calculateNewPosition(animal.getPosition(), direction);
+        TreeSet<Animal> animalsList = animals.get(animal.getPosition());
+        animalsList.remove(animal);
+        animal.setPosition(newPosition);
+        addAnimal(animal);
+    }
+
+    public void removeDead() {
+        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
+            for (Animal animal : animalList){
+                if (animal.isDead()) {
+                    TreeSet<Animal> animalsList = animals.get(animal.getPosition());
+                    animalsList.remove(animal);
+                }
+            }
+        }
+    }
+
+    public void commendMove() {
+        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
+            for (Animal animal : animalList){
+                animal.move();
+            }
+        }
+    }
+
+    public void commendEat() {
+        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
+            if (animalList.size() > 0){
+                Animal animal = animalList.first();
+                if (plantAt(animal.getPosition())) {
+                    System.out.println(animal.getEnergy());
+                    animal.eat(energyPerPlant);
+                    System.out.println(animal.getEnergy());
+                    plants.remove(animal.getPosition());
+                }
+            }
+        }
+    }
+
+    public void decrementEnergy() {
+        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
+            for (Animal animal : animalList){
+                animal.decrementEnergy();
+            }
+        }
+    }
+
+    public void simulateDay() {
+        removeDead();
+        commendMove();
+        commendEat();
+
+        generatePlant();
+        decrementEnergy();
     }
 }

@@ -17,12 +17,9 @@ public class SimulationEngine implements Runnable {
     }
 
     public void run() {
-        Animal animal = new Obedient(50, 50, map);
-        map.addAnimal(animal);
         while (true){
             try {
-//                map.generatePlant();
-                animal.move();
+                map.simulateDay();
                 observer.rerender();
                 Thread.sleep(this.moveDelay);
             } catch (InterruptedException e){

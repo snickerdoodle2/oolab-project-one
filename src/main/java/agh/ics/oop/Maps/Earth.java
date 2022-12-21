@@ -2,11 +2,12 @@ package agh.ics.oop.Maps;
 
 import agh.ics.oop.Plants.PlantGeneratorsList;
 import agh.ics.oop.Utility.Directions;
+import agh.ics.oop.Utility.Options;
 import agh.ics.oop.Utility.Vector2D;
 
 public class Earth extends WorldMap {
-    public Earth(int width, int height, PlantGeneratorsList plantGenerator) {
-        super(width, height, plantGenerator);
+    public Earth(Options options) {
+        super(options);
     }
 
     @Override
