@@ -2,9 +2,9 @@ package agh.ics.oop.Maps;
 
 import agh.ics.oop.Animal.Animal;
 import agh.ics.oop.Animal.AnimalTypesList;
-import agh.ics.oop.Animal.Obedient;
+import agh.ics.oop.Animal.ObedientAnimal;
 import agh.ics.oop.MapElements.Plant;
-import agh.ics.oop.Plants.Equator;
+import agh.ics.oop.Plants.EquatorPlant;
 import agh.ics.oop.Plants.PlantGenerator;
 import agh.ics.oop.Utility.Directions;
 import agh.ics.oop.Utility.Options;
@@ -39,7 +39,7 @@ public abstract class WorldMap {
 
         this.animalType = options.animalType;
         this.plantGenerator = switch (options.plantType) {
-            case EQUATOR -> new Equator(this, 5 );
+            case EQUATOR -> new EquatorPlant(this, 5 );
             case TOXIC -> null;
         };
         this.energyPerPlant = options.energyPerPlant;
@@ -88,22 +88,22 @@ public abstract class WorldMap {
     public boolean plantAt(Vector2D position) {
         return this.plants.containsKey(position);
     }
-    public boolean animalAt(Vector2D position) {
+    private boolean animalAt(Vector2D position) {
         TreeSet<Animal> tmp = this.animals.get(position);
         if (tmp == null ) return false;
         return tmp.size() > 0;
     }
 
-    public void generatePlant(){
+    private void generatePlant(){
         Vector2D position = this.plantGenerator.generatePlant();
         this.plants.put(position, new Plant(position));
     }
 
     protected abstract Vector2D calculateNewPosition(Vector2D position, Directions direction);
 
-    public void newAnimal(){
+    private void newAnimal(){
         Animal animal = switch (animalType) {
-            case OBIDIENT -> new Obedient(options, this);
+            case OBIDIENT -> new ObedientAnimal(options, this);
             case CRAZY -> null;
         };
         addAnimal(animal);
@@ -128,6 +128,12 @@ public abstract class WorldMap {
         }
     }
 
+    public void init() {
+        for (int i = 0; i < options.initialAnimals; i++ ){
+            newAnimal();
+        }
+    }
+
     public void moveAnimal(Animal animal, Directions direction){
         Vector2D newPosition = this.calculateNewPosition(animal.getPosition(), direction);
         TreeSet<Animal> animalsList = animals.get(animal.getPosition());
@@ -136,9 +142,9 @@ public abstract class WorldMap {
         addAnimal(animal);
     }
 
-    public void removeDead() {
+    private void removeDead() {
         for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
-            for (Animal animal : animalList){
+            for (Animal animal : new ArrayList<>(animalList)){
                 if (animal.isDead()) {
                     TreeSet<Animal> animalsList = animals.get(animal.getPosition());
                     animalsList.remove(animal);
@@ -147,31 +153,45 @@ public abstract class WorldMap {
         }
     }
 
-    public void commendMove() {
+    private void commendMove() {
         for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
-            for (Animal animal : animalList){
+            for (Animal animal : new ArrayList<>(animalList)){
                 animal.move();
             }
         }
     }
 
-    public void commendEat() {
+    private void commendEat() {
         for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
             if (animalList.size() > 0){
-                Animal animal = animalList.first();
+                Animal animal = animalList.last();
                 if (plantAt(animal.getPosition())) {
-                    System.out.println(animal.getEnergy());
                     animal.eat(energyPerPlant);
-                    System.out.println(animal.getEnergy());
                     plants.remove(animal.getPosition());
                 }
             }
         }
     }
 
-    public void decrementEnergy() {
+    private void commendBreed() {
         for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
-            for (Animal animal : animalList){
+            if (animalList.size() >= 2) {
+                Animal parent1 = animalList.pollLast();
+                Animal parent2 = animalList.pollLast();
+
+                if (parent1.getEnergy() >= options.minToBreed && parent2.getEnergy() >= options.minToBreed){
+//                    BREED FUNCTION
+                }
+
+                animalList.add(parent1);
+                animalList.add(parent2);
+            }
+        }
+    }
+
+    private void decrementEnergy() {
+        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
+            for (Animal animal : new ArrayList<>(animalList)){
                 animal.decrementEnergy();
             }
         }
@@ -181,7 +201,7 @@ public abstract class WorldMap {
         removeDead();
         commendMove();
         commendEat();
-
+        commendBreed();
         generatePlant();
         decrementEnergy();
     }

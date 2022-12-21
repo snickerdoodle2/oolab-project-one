@@ -1,6 +1,8 @@
 package agh.ics.oop.Animal;
 
+import agh.ics.oop.Genes.CorrectionGene;
 import agh.ics.oop.Genes.Gene;
+import agh.ics.oop.Genes.RandomGene;
 import agh.ics.oop.Maps.WorldMap;
 import agh.ics.oop.Utility.Directions;
 import agh.ics.oop.Utility.Options;
@@ -27,7 +29,23 @@ public abstract class Animal {
         this.position = new Vector2D(random.nextInt(map.getWidth()), random.nextInt(map.getHeight()));
 
         this.geneLength = options.geneLength;
-        this.genes = new Gene(geneLength);
+        this.genes = switch (options.geneType) {
+            case RANDOM -> new RandomGene(geneLength);
+            case CORRECTION -> new CorrectionGene(geneLength);
+        };
+    }
+
+    public Animal(Options options, WorldMap map, Animal parent1, Animal parent2) {
+        this.energy = options.energyToBreed*2;
+        this.map = map;
+        this.position = parent1.getPosition();
+
+        this.geneLength = options.geneLength;
+
+        this.genes = switch (options.geneType) {
+            case RANDOM -> new RandomGene(geneLength);
+            case CORRECTION -> new CorrectionGene(geneLength);
+        };
     }
 
     protected abstract void nextGene();

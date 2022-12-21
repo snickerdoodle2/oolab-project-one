@@ -3,11 +3,11 @@ package agh.ics.oop.Plants;
 import agh.ics.oop.Maps.WorldMap;
 import agh.ics.oop.Utility.Vector2D;
 
-public class Equator extends PlantGenerator {
+public class EquatorPlant extends PlantGenerator {
 
     private Vector2D equatorLL;
     private Vector2D equatorUR;
-    public Equator(WorldMap map, int equatorSize) {
+    public EquatorPlant(WorldMap map, int equatorSize) {
         super(map);
         int mapHeight = map.getHeight();
         int mapWidth = map.getWidth();
@@ -29,9 +29,9 @@ public class Equator extends PlantGenerator {
     @Override
     protected Vector2D generatePreferred() {
 //            TODO: Make plant generator inside equator better :D
-        Vector2D tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(equatorUR.y-equatorLL.y)+equatorLL.y);
+        Vector2D tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(equatorUR.y-equatorLL.y+1)+equatorLL.y);
         while (map.plantAt(tmp)){
-            tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(equatorUR.y-equatorLL.y)+equatorLL.y);
+            tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(equatorUR.y-equatorLL.y+1)+equatorLL.y);
         }
         return tmp;
     }
@@ -47,10 +47,10 @@ public class Equator extends PlantGenerator {
             down = this.equatorUR.y + 1;
             up = this.map.getHeight() - 1;
         }
-        Vector2D tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(up - down) + down);
+        Vector2D tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(up - down+1) + down);
 
         while (map.plantAt(tmp)){
-            tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(up - down) + down);
+            tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(up - down+1) + down);
         }
         return tmp;
     }

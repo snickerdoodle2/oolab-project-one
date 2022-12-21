@@ -1,14 +1,14 @@
 package agh.ics.oop.Genes;
 
+import agh.ics.oop.Animal.Animal;
+
 import java.util.Random;
 
-public class Gene {
+public abstract class Gene {
     private final int length;
+    protected static int maxGene = 7;
 
-    private static int minGene = 0;
-    private static int maxGene = 7;
-
-    private static final Random random = new Random();
+    protected static final Random random = new Random();
 
     private int[] genes;
 
@@ -20,6 +20,13 @@ public class Gene {
             this.genes[i] = this.random.nextInt(maxGene+1);
         }
     }
+
+    public Gene(Animal parent1, Animal parent2, int length) {
+        this.length = length;
+
+    }
+
+    protected abstract int mutate(int value);
 
     public int getGene(int i) {
         return genes[i % this.length];

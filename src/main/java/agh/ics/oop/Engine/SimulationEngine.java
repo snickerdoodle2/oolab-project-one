@@ -1,7 +1,5 @@
 package agh.ics.oop.Engine;
 
-import agh.ics.oop.Animal.Animal;
-import agh.ics.oop.Animal.Obedient;
 import agh.ics.oop.Maps.WorldMap;
 import agh.ics.oop.Utility.IMapObserver;
 
@@ -17,6 +15,7 @@ public class SimulationEngine implements Runnable {
     }
 
     public void run() {
+        map.init();
         while (true){
             try {
                 map.simulateDay();

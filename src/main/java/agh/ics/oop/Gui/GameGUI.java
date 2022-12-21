@@ -6,7 +6,7 @@ import agh.ics.oop.Engine.SimulationEngine;
 import agh.ics.oop.Gui.Legend.Legend;
 import agh.ics.oop.Gui.Legend.LegendItem;
 
-import agh.ics.oop.Maps.Earth;
+import agh.ics.oop.Maps.EarthMap;
 import agh.ics.oop.Maps.WorldMap;
 
 import agh.ics.oop.Plants.PlantGeneratorsList;
@@ -66,7 +66,8 @@ public class GameGUI implements IMapObserver {
         options.plantType = PlantGeneratorsList.EQUATOR;
         options.animalType = AnimalTypesList.OBIDIENT;
         options.energyPerPlant = 10;
-        map = new Earth(options);
+        options.initialAnimals = 30;
+        map = new EarthMap(options);
         mapPane.getChildren().setAll(new Label(":)"));
         mapPane.setAlignment(Pos.CENTER);
 
@@ -80,7 +81,7 @@ public class GameGUI implements IMapObserver {
         container.getChildren().setAll(leftColumn, mapPane, rightColumn);
         container.setSpacing(24);
 
-        engineThread = new Thread(new SimulationEngine(map, 250, this));
+        engineThread = new Thread(new SimulationEngine(map, 100, this));
 
         engineThread.start();
 
