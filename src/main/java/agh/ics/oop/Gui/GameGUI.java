@@ -59,23 +59,8 @@ public class GameGUI implements IMapObserver {
         return myVBox;
     }
     public Scene getScene() {
-        Options options = new Options();
-        options.initialEnergy = 100;
-        options.geneLength = 20;
-        options.mapHeight = 50;
-        options.mapWidth = 50;
-        options.plantType = PlantGeneratorsList.EQUATOR;
-        options.animalType = AnimalTypesList.OBIDIENT;
-        options.energyPerPlant = 5;
-        options.initialAnimals = 30;
-        options.minToBreed = 20;
-        options.energyToBreed = 10;
-        options.geneType = GeneTypesList.CORRECTION;
-        options.minMutations = 5;
-        options.maxMutations = 10;
 
-        map = new EarthMap(options);
-        mapPane.getChildren().setAll(new Label(":)"));
+        map = new EarthMap(gameOptions);
         mapPane.setAlignment(Pos.CENTER);
 
         VBox leftColumn = generateColumn();
