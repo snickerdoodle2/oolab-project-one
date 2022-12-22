@@ -8,6 +8,8 @@ import agh.ics.oop.Maps.MapTypeList;
 import agh.ics.oop.Plants.PlantGeneratorsList;
 import agh.ics.oop.Utility.Options;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -196,6 +198,24 @@ public class SettingsGUI extends Application {
         generalSettings.add(dayLength.generateInput(), 0, 2, 1, 1);
 
         startButton = new Button("START");
+
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    checkInputs();
+                    System.out.println(mapType.getValue());
+                    System.out.println(plantType.getValue());
+                    System.out.println(animalType.getValue());
+                    System.out.println(geneType.getValue());
+                } catch (NumberFormatException e) {
+                    System.out.println(e.getMessage());
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }
+        });
+
         generalSettings.add(startButton, 1, 2, 1, 1);
         GridPane.setHalignment(startButton, HPos.CENTER);
 
@@ -205,6 +225,36 @@ public class SettingsGUI extends Application {
         primaryStage.setScene(settingsScene);
         primaryStage.setTitle(titleText);
         primaryStage.show();
+    }
+
+    private boolean checkInputs() throws NumberFormatException, Exception  {
+        if (mapWidth.getValue() <= 0) return false;
+        if (mapHeight.getValue() <= 0) return false;
+
+        if (plantAmount.getValue() <= 0) return false;
+        if (plantPerDay.getValue() <= 0) return false;
+        if (energyPerPlant.getValue() <= 0) return false;
+
+        if (animalAmount.getValue() <= 0) return false;
+        if (startingAnimalEnergy.getValue() <= 0) return false;
+        if (minToBreed.getValue() <= 0) return false;
+        if (energyToBreed.getValue() <= 0) return false;
+        if (minToBreed.getValue() >= energyToBreed.getValue() ) return false;
+
+        if (genesLength.getValue() <= 0) return false;
+        if (minMutations.getValue() < 0) return false;
+        if (maxMutations.getValue() < 0) return false;
+        if (minMutations.getValue() > maxMutations.getValue()) return false;
+
+        if (dayLength.getValue() <= 0) return false;
+
+        if (mapType.getValue() == null) throw new Exception("MAP");
+        if (plantType.getValue() == null) throw new Exception("PLANT");
+        if (animalType.getValue() == null) throw new Exception("ANIMAL");
+        if (geneType.getValue() == null) throw new Exception("GENE");
+
+
+        return true;
     }
 
 
