@@ -2,6 +2,7 @@ package agh.ics.oop.Maps;
 
 import agh.ics.oop.Animal.Animal;
 import agh.ics.oop.Animal.AnimalTypesList;
+import agh.ics.oop.Animal.CrazyAnimal;
 import agh.ics.oop.Animal.ObedientAnimal;
 import agh.ics.oop.MapElements.Plant;
 import agh.ics.oop.Plants.EquatorPlant;
@@ -107,7 +108,7 @@ public abstract class WorldMap {
     private void newAnimal(){
         Animal animal = switch (animalType) {
             case OBIDIENT -> new ObedientAnimal(options, this);
-            case CRAZY -> null;
+            case CRAZY -> new CrazyAnimal(options, this);
         };
         addAnimal(animal);
         this.animalsAlive++;
@@ -190,7 +191,7 @@ public abstract class WorldMap {
                 if (parent1.getEnergy() >= options.minToBreed && parent2.getEnergy() >= options.minToBreed){
                     Animal kid = switch (animalType) {
                         case OBIDIENT -> new ObedientAnimal(options, this, parent1, parent2);
-                        case CRAZY -> null;
+                        case CRAZY -> new CrazyAnimal(options, this, parent1, parent2);
                     };
                     addAnimal(kid);
                     this.animalsAlive++;

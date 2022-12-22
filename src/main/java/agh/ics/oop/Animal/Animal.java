@@ -16,11 +16,10 @@ public abstract class Animal {
     private final Gene genes;
     private final WorldMap map;
 
-
     protected int curGeneIndex = 0;
     protected final int geneLength;
 
-    private static final Random random = new Random();
+    protected static final Random random = new Random();
 
     public Animal(Options options, WorldMap map) {
         this.energy = options.initialEnergy;
