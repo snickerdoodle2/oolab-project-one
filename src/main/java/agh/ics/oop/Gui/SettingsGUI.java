@@ -83,7 +83,7 @@ public class SettingsGUI extends Application {
         mapHeight = new IntInput("Wysokosc mapy");
         mapSettings.add(mapHeight.generateInput(), 1, 1, 1, 1);
 
-        String[] mapTypes = Stream.of(MapTypeList.values()).map((e) -> e.name()).toArray(String[]::new);
+        String[] mapTypes = Stream.of(MapTypeList.values()).map(Enum::toString).toArray(String[]::new);
         mapType = new Dropdown(mapTypes, "Rodzaj mapy");
         mapSettings.add(mapType.generateInput(), 0, 2, 1, 1);
 
@@ -111,7 +111,7 @@ public class SettingsGUI extends Application {
         plantAmount = new IntInput("Ilosc poczatkowa");
         plantSettings.add(plantAmount.generateInput(), 1, 1, 1, 1);
 
-        String[] plantTypes = Stream.of(PlantGeneratorsList.values()).map((e) -> e.name()).toArray(String[]::new);
+        String[] plantTypes = Stream.of(PlantGeneratorsList.values()).map(Enum::toString).toArray(String[]::new);
         plantType = new Dropdown(plantTypes, "Rodzaj roslin");
         plantSettings.add(plantType.generateInput(), 0, 2, 1, 1);
 
@@ -145,7 +145,7 @@ public class SettingsGUI extends Application {
         energyToBreed = new IntInput("Zuzyta energia na rozmnazanie");
         animalSettings.add(energyToBreed.generateInput(), 1, 2, 1, 1);
 
-        String[] animalTypes = Stream.of(AnimalTypesList.values()).map((e) -> e.name()).toArray(String[]::new);
+        String[] animalTypes = Stream.of(AnimalTypesList.values()).map(AnimalTypesList::toString).toArray(String[]::new);
         animalType = new Dropdown(animalTypes, "Rodzaj zwierzat");
         animalSettings.add(animalType.generateInput(), 0, 3, 1, 1);
 
@@ -172,7 +172,7 @@ public class SettingsGUI extends Application {
         genesLength = new IntInput("Dlugosc genu");
         genesSettings.add(genesLength.generateInput(), 1, 2, 1, 1);
 
-        String[] geneTypes = Stream.of(GeneTypesList.values()).map((e) -> e.name()).toArray(String[]::new);
+        String[] geneTypes = Stream.of(GeneTypesList.values()).map(Enum::toString).toArray(String[]::new);
         geneType = new Dropdown(geneTypes, "Rodzaj genow");
         genesSettings.add(geneType.generateInput(), 0, 2, 1, 1);
 

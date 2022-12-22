@@ -107,7 +107,7 @@ public abstract class WorldMap {
 
     private void newAnimal(){
         Animal animal = switch (animalType) {
-            case OBIDIENT -> new ObedientAnimal(options, this);
+            case OBEDIENT -> new ObedientAnimal(options, this);
             case CRAZY -> new CrazyAnimal(options, this);
         };
         addAnimal(animal);
@@ -190,7 +190,7 @@ public abstract class WorldMap {
 
                 if (parent1.getEnergy() >= options.minToBreed && parent2.getEnergy() >= options.minToBreed){
                     Animal kid = switch (animalType) {
-                        case OBIDIENT -> new ObedientAnimal(options, this, parent1, parent2);
+                        case OBEDIENT -> new ObedientAnimal(options, this, parent1, parent2);
                         case CRAZY -> new CrazyAnimal(options, this, parent1, parent2);
                     };
                     addAnimal(kid);
