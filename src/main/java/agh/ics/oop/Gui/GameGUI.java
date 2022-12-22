@@ -3,6 +3,7 @@ package agh.ics.oop.Gui;
 import agh.ics.oop.Animal.AnimalTypesList;
 import agh.ics.oop.Engine.SimulationEngine;
 
+import agh.ics.oop.Genes.GeneTypesList;
 import agh.ics.oop.Gui.Legend.Legend;
 import agh.ics.oop.Gui.Legend.LegendItem;
 
@@ -65,8 +66,14 @@ public class GameGUI implements IMapObserver {
         options.mapWidth = 50;
         options.plantType = PlantGeneratorsList.EQUATOR;
         options.animalType = AnimalTypesList.OBIDIENT;
-        options.energyPerPlant = 10;
+        options.energyPerPlant = 5;
         options.initialAnimals = 30;
+        options.minToBreed = 20;
+        options.energyToBreed = 10;
+        options.geneType = GeneTypesList.CORRECTION;
+        options.minMutations = 5;
+        options.maxMutations = 10;
+
         map = new EarthMap(options);
         mapPane.getChildren().setAll(new Label(":)"));
         mapPane.setAlignment(Pos.CENTER);
@@ -85,7 +92,6 @@ public class GameGUI implements IMapObserver {
 
         engineThread.start();
 
-
         return new Scene(container, windowsWidth, windowsHeight);
     }
 
@@ -98,6 +104,12 @@ public class GameGUI implements IMapObserver {
     public void rerender() {
         Platform.runLater(() -> {
             mapPane.getChildren().setAll(map.toGridPane(500));
+        });
+    }
+
+    public void threadFinished() {
+        Platform.runLater(() -> {
+            System.out.println("KONIEC:)");
         });
     }
 }

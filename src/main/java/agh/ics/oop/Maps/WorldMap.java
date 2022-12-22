@@ -32,6 +32,10 @@ public abstract class WorldMap {
     private final Map<Vector2D, TreeSet<Animal>> animals = new HashMap<>();
 
 
+    private int animalsAlive = 0;
+    private int day = 0;
+
+
     public WorldMap(Options options){
         this.options = options;
         this.width = options.mapWidth;
@@ -81,7 +85,6 @@ public abstract class WorldMap {
         for (int y = 0; y <= this.height; y++){
             grid.getRowConstraints().add(new RowConstraints(heightPixelSize));
         }
-
         return grid;
     }
 
@@ -107,6 +110,7 @@ public abstract class WorldMap {
             case CRAZY -> null;
         };
         addAnimal(animal);
+        this.animalsAlive++;
     }
 
     private void addAnimal(Animal animal) {
@@ -117,7 +121,8 @@ public abstract class WorldMap {
                 public int compare(Animal o1, Animal o2) {
                     int energy1 = o1.getEnergy();
                     int energy2 = o2.getEnergy();
-                    return Integer.compare(energy1, energy2);
+                    int tmp = Integer.compare(energy1, energy2);
+                    return tmp != 0 ? tmp : (o1.equals(o2) ? 0 : 1);
                 }
             });
 
@@ -126,6 +131,8 @@ public abstract class WorldMap {
         } else {
             animalsList.add(animal);
         }
+
+
     }
 
     public void init() {
@@ -148,6 +155,7 @@ public abstract class WorldMap {
                 if (animal.isDead()) {
                     TreeSet<Animal> animalsList = animals.get(animal.getPosition());
                     animalsList.remove(animal);
+                    this.animalsAlive--;
                 }
             }
         }
@@ -180,8 +188,16 @@ public abstract class WorldMap {
                 Animal parent2 = animalList.pollLast();
 
                 if (parent1.getEnergy() >= options.minToBreed && parent2.getEnergy() >= options.minToBreed){
-//                    BREED FUNCTION
+                    Animal kid = switch (animalType) {
+                        case OBIDIENT -> new ObedientAnimal(options, this, parent1, parent2);
+                        case CRAZY -> null;
+                    };
+                    addAnimal(kid);
+                    this.animalsAlive++;
                 }
+
+                parent1.breed(options.energyToBreed);
+                parent2.breed(options.energyToBreed);
 
                 animalList.add(parent1);
                 animalList.add(parent2);
@@ -197,12 +213,14 @@ public abstract class WorldMap {
         }
     }
 
-    public void simulateDay() {
+    public boolean simulateDay() {
         removeDead();
         commendMove();
         commendEat();
         commendBreed();
         generatePlant();
         decrementEnergy();
+        this.day++;
+        return this.animalsAlive == 0;
     }
 }

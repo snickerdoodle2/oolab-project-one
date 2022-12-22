@@ -8,6 +8,10 @@ public class ObedientAnimal extends Animal {
         super(options, map);
     }
 
+    public ObedientAnimal(Options options, WorldMap map, Animal parent1, Animal parent2) {
+        super(options, map, parent1, parent2);
+    }
+
     @Override
     protected void nextGene() {
         super.curGeneIndex++;

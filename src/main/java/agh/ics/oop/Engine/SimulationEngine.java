@@ -18,7 +18,10 @@ public class SimulationEngine implements Runnable {
         map.init();
         while (true){
             try {
-                map.simulateDay();
+                if (map.simulateDay()) {
+                    observer.rerender();
+                    break;
+                };
                 observer.rerender();
                 Thread.sleep(this.moveDelay);
             } catch (InterruptedException e){
@@ -26,5 +29,6 @@ public class SimulationEngine implements Runnable {
             }
 
         }
+        observer.threadFinished();
     }
 }

@@ -37,21 +37,22 @@ public abstract class Animal {
 
     public Animal(Options options, WorldMap map, Animal parent1, Animal parent2) {
         this.energy = options.energyToBreed*2;
+
         this.map = map;
         this.position = parent1.getPosition();
 
         this.geneLength = options.geneLength;
 
         this.genes = switch (options.geneType) {
-            case RANDOM -> new RandomGene(geneLength);
-            case CORRECTION -> new CorrectionGene(geneLength);
+            case RANDOM -> new RandomGene(geneLength, parent1, parent2, options);
+            case CORRECTION -> new CorrectionGene(geneLength, parent1, parent2, options);
         };
     }
 
     protected abstract void nextGene();
 
     public void move() {
-        int curGene = genes.getGene(this.curGeneIndex);
+        int curGene = this.genes.getGene(this.curGeneIndex);
         nextGene();
         this.map.moveAnimal(this, Directions.values()[curGene]);
     }
@@ -64,7 +65,7 @@ public abstract class Animal {
         return this.energy == 0;
     }
     public Vector2D getPosition() {
-        return position;
+        return this.position;
     }
 
     public void setPosition(Vector2D position) {
@@ -72,11 +73,18 @@ public abstract class Animal {
     }
 
     public int getEnergy() {
-        return energy;
+        return this.energy;
     }
 
     public void eat(int eatenEnergy) {
         this.energy += eatenEnergy;
     }
 
+    public void breed(int breedEnergy) {
+        this.energy -= breedEnergy;
+    }
+
+    public Gene getGenes() {
+        return genes;
+    }
 }
