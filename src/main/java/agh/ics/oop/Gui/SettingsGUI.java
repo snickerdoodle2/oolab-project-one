@@ -11,6 +11,7 @@ import javafx.application.Application;
 import javafx.geometry.HPos;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -47,6 +48,7 @@ public class SettingsGUI extends Application {
     private Dropdown plantType;
     private Dropdown animalType;
     private Dropdown geneType;
+    private Button startButton;
 
     public void start(Stage primaryStage){
         VBox settingsContainer = new VBox();
@@ -176,16 +178,29 @@ public class SettingsGUI extends Application {
 
         settingsContainer.getChildren().add(genesSettings);
 
-//        FINAL SETTINGS
-        GridPane finalSettings = new GridPane();
-        finalSettings.setAlignment(Pos.TOP_CENTER);
-        finalSettings.getColumnConstraints().addAll(columnWidth, columnWidth);
+//        GENERAL SETTINGS
+        GridPane generalSettings = new GridPane();
+        generalSettings.setAlignment(Pos.TOP_CENTER);
+        generalSettings.getColumnConstraints().addAll(columnWidth, columnWidth);
+
+        Text generalTitle = new Text("Ustawienia ogolne");
+        generalTitle.setStyle("-fx-font-size: 16;" +
+                "-fx-font-weight: 700");
+        GridPane.setHalignment(generalTitle, HPos.CENTER);
+        generalSettings.add(generalTitle, 0, 0, 2, 1);
+
+//        TODO: LOAD FILE WITH SETTINGS
+
 
         dayLength = new IntInput("Dlugosc dnia (ms)");
-        finalSettings.add(dayLength.generateInput(), 0, 0, 1, 1);
+        generalSettings.add(dayLength.generateInput(), 0, 2, 1, 1);
+
+        startButton = new Button("START");
+        generalSettings.add(startButton, 1, 2, 1, 1);
+        GridPane.setHalignment(startButton, HPos.CENTER);
 
 
-        settingsContainer.getChildren().add(finalSettings);
+        settingsContainer.getChildren().add(generalSettings);
 
         primaryStage.setScene(settingsScene);
         primaryStage.setTitle(titleText);
