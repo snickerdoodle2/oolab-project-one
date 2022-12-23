@@ -10,9 +10,9 @@
 
 	- [x] Istnieje możliwość wczytania alternatywnej, sporządzonej przez użytkownika konfiguracji.
 
-1. - [ ] Uruchomienie symulacji powinno skutkować pojawieniem się nowego okna obsługującego daną symulację.
+1. - [x] Uruchomienie symulacji powinno skutkować pojawieniem się nowego okna obsługującego daną symulację.
 
-1. - [ ] Jednocześnie uruchomionych może być wiele symulacji, każda w swoim oknie, każda na osobnej mapie.
+1. - [x] Jednocześnie uruchomionych może być wiele symulacji, każda w swoim oknie, każda na osobnej mapie.
 
 1. - [ ] Sekcja symulacji ma wyświetlać animację pokazującą pozycje zwierząt, ich energię w dowolnej formie (np. koloru lub paska zdrowia) oraz pozycje roślin - i ich zmiany.
 
