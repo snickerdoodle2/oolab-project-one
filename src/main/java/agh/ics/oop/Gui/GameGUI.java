@@ -8,6 +8,7 @@ import agh.ics.oop.Gui.Legend.Legend;
 import agh.ics.oop.Gui.Legend.LegendItem;
 
 import agh.ics.oop.Maps.EarthMap;
+import agh.ics.oop.Maps.PortalsMap;
 import agh.ics.oop.Maps.WorldMap;
 
 import agh.ics.oop.Plants.PlantGeneratorsList;
@@ -62,7 +63,7 @@ public class GameGUI implements IMapObserver {
 
         map = switch (gameOptions.mapType) {
             case EARTH -> new EarthMap(gameOptions);
-            case PORTALS -> null;
+            case PORTALS -> new PortalsMap(gameOptions);
         };
         mapPane.setAlignment(Pos.CENTER);
 

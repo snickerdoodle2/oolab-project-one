@@ -7,6 +7,7 @@ import agh.ics.oop.Animal.ObedientAnimal;
 import agh.ics.oop.MapElements.Plant;
 import agh.ics.oop.Plants.EquatorPlant;
 import agh.ics.oop.Plants.PlantGenerator;
+import agh.ics.oop.Plants.ToxicPlant;
 import agh.ics.oop.Utility.Directions;
 import agh.ics.oop.Utility.Options;
 import agh.ics.oop.Utility.Vector2D;
@@ -32,6 +33,8 @@ public abstract class WorldMap {
 
     private final Map<Vector2D, TreeSet<Animal>> animals = new HashMap<>();
 
+    private final Map<Vector2D, Integer> deadAnimalsMap = new HashMap<>();
+
 
     private int animalsAlive = 0;
     private int day = 0;
@@ -42,10 +45,16 @@ public abstract class WorldMap {
         this.width = options.mapWidth;
         this.height = options.mapHeight;
 
+        for (int i = 0; i < this.width; i++){
+            for (int j = 0; j < this.height; j++) {
+                deadAnimalsMap.put(new Vector2D(i, j), 0);
+            }
+        }
+
         this.animalType = options.animalType;
         this.plantGenerator = switch (options.plantType) {
             case EQUATOR -> new EquatorPlant(this, options.mapHeight/10 );
-            case TOXIC -> null;
+            case TOXIC -> new ToxicPlant(this);
         };
         this.energyPerPlant = options.energyPerPlant;
     }
@@ -159,6 +168,8 @@ public abstract class WorldMap {
                 if (animal.isDead()) {
                     TreeSet<Animal> animalsList = animals.get(animal.getPosition());
                     animalsList.remove(animal);
+                    Integer field = deadAnimalsMap.getOrDefault(animal.getPosition(), 0);
+                    deadAnimalsMap.put(animal.getPosition(), field.intValue()+1);
                     this.animalsAlive--;
                 }
             }
@@ -228,5 +239,9 @@ public abstract class WorldMap {
         decrementEnergy();
         this.day++;
         return this.animalsAlive == 0;
+    }
+
+    public Map<Vector2D, Integer> getDeadAnimalsMap() {
+        return deadAnimalsMap;
     }
 }
