@@ -4,9 +4,9 @@
 1. - [x] Aplikacja ma być realizowana z użyciem graficznego interfejsu użytkownika z wykorzystaniem biblioteki JavaFX.
 
 1. Jej głównym zadaniem jest umożliwienie uruchamiania symulacji o wybranych konfiguracjach.
-	- [ ] Powinna umożliwić wybranie jednej z uprzednio przygotowanych gotowych konfiguracji.
+	- [x] Powinna umożliwić wybranie jednej z uprzednio przygotowanych gotowych konfiguracji.
 
-	- [ ] Dostępne konfiguracje mają formę znajdujących się w odpowiednim folderze na dysku plików konfiguracyjnych (plik może zawierać po prostu pary klucz + wartość, po jednej na linijkę).
+	- [x] Dostępne konfiguracje mają formę znajdujących się w odpowiednim folderze na dysku plików konfiguracyjnych (plik może zawierać po prostu pary klucz + wartość, po jednej na linijkę).
 
 	- [x] Istnieje możliwość wczytania alternatywnej, sporządzonej przez użytkownika konfiguracji.
 

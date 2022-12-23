@@ -15,8 +15,8 @@ public enum MapTypeList {
 
     public static MapTypeList fromString(String input){
         return switch (input) {
-            case "Kula Ziemska" -> EARTH;
-            case "Piekielny Portal" -> PORTALS;
+            case "Kula Ziemska", "EARTH" -> EARTH;
+            case "Piekielny Portal", "PORTALS" -> PORTALS;
             default -> null;
         };
     }

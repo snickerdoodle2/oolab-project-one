@@ -15,8 +15,8 @@ public enum PlantGeneratorsList {
 
     public static PlantGeneratorsList fromString(String input){
         return switch (input) {
-            case "Zalesione Rowniki" -> EQUATOR;
-            case "Toksyczne Trupy" -> TOXIC;
+            case "Zalesione Rowniki", "EQUATOR" -> EQUATOR;
+            case "Toksyczne Trupy", "TOXIC" -> TOXIC;
             default -> null;
         };
     }

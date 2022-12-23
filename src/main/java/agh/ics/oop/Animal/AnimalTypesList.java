@@ -14,8 +14,8 @@ public enum AnimalTypesList {
 
     public static AnimalTypesList fromString(String input){
         return switch (input) {
-            case "Nieco szalenstwa" -> CRAZY;
-            case "Pelna predestynacja" -> OBEDIENT;
+            case "Nieco szalenstwa", "CRAZY" -> CRAZY;
+            case "Pelna predestynacja", "OBEDIENT" -> OBEDIENT;
             default -> null;
         };
     }

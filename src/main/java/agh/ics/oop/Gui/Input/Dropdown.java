@@ -20,6 +20,7 @@ public class Dropdown {
         title.setStyle("-fx-font-size: 12");
         input = new ComboBox<>(options);
 
+
         VBox inputContainer = new VBox(title, input);
         inputContainer.setSpacing(5);
         inputContainer.setStyle("-fx-padding: 5");
@@ -28,5 +29,9 @@ public class Dropdown {
 
     public String getValue() {
         return input.getValue();
+    }
+
+    public void setValue(String value) {
+        input.setValue(value);
     }
 }

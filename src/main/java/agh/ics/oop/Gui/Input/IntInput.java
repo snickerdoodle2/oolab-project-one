@@ -43,5 +43,10 @@ public class IntInput {
         return Integer.parseInt(input.getText());
     }
 
+    public void setValue(String value) {
+        System.out.println(value);
+        input.setText(value);
+    }
+
 
 }

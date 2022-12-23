@@ -15,8 +15,8 @@ public enum GeneTypesList {
 
     public static GeneTypesList fromString(String input){
         return switch (input) {
-            case "Pelna Losowosc" -> RANDOM;
-            case "Lekka Korekta" -> CORRECTION;
+            case "Pelna Losowosc", "RANDOM" -> RANDOM;
+            case "Lekka Korekta", "CORRECTION" -> CORRECTION;
             default -> null;
         };
     }

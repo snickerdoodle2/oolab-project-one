@@ -22,7 +22,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.awt.*;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.Scanner;
 import java.util.stream.Stream;
 
 public class SettingsGUI extends Application {
@@ -52,7 +55,6 @@ public class SettingsGUI extends Application {
     private Dropdown plantType;
     private Dropdown animalType;
     private Dropdown geneType;
-    private Button startButton;
 
     public void start(Stage primaryStage){
         VBox settingsContainer = new VBox();
@@ -194,12 +196,91 @@ public class SettingsGUI extends Application {
         generalSettings.add(generalTitle, 0, 0, 2, 1);
 
 //        TODO: LOAD FILE WITH SETTINGS
+        Button loadFileButton = new Button("ZALADUJ PLIK");
+        GridPane.setHalignment(loadFileButton, HPos.CENTER);
+        generalSettings.add(loadFileButton, 1, 1, 1, 1);
+
+        loadFileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                try {
+                    File presetFile = new File("src/main/resources/presets/preset_one");
+                    Scanner presetReader = new Scanner(presetFile);
+                    while (presetReader.hasNextLine()) {
+                        String line = presetReader.nextLine();
+                        String[] lineArgs = line.split("\\s+");
+                        if (lineArgs.length < 2) continue;
+                        switch (lineArgs[0]) {
+                            case "MAP_HEIGHT":
+                                mapHeight.setValue(lineArgs[1]);
+                                break;
+                            case "MAP_WIDTH":
+                                mapWidth.setValue(lineArgs[1]);
+                                break;
+                            case "MAP_TYPE":
+                                mapType.setValue(lineArgs[1]);
+                                break;
+                            case "PLANT_TYPE":
+                                plantType.setValue(lineArgs[1]);
+                                break;
+                            case "INITIAL_PLANTS":
+                                plantAmount.setValue(lineArgs[1]);
+                                break;
+                            case "PLANTS_PER_DAY":
+                                plantPerDay.setValue(lineArgs[1]);
+                                break;
+                            case "ENERGY_PER_PLANT":
+                                energyPerPlant.setValue(lineArgs[1]);
+                                break;
+                            case "ANIMAL_TYPE":
+                                animalType.setValue(lineArgs[1]);
+                                break;
+                            case "MIN_TO_BREED":
+                                minToBreed.setValue(lineArgs[1]);
+                                break;
+                            case "INITIAL_ANIMALS":
+                                animalAmount.setValue(lineArgs[1]);
+                                break;
+                            case "INITIAL_ENERGY":
+                                startingAnimalEnergy.setValue(lineArgs[1]);
+                                break;
+                            case "ENERGY_TO_BREED":
+                                energyToBreed.setValue(lineArgs[1]);
+                                break;
+                            case "GENE_TYPE":
+                                geneType.setValue(lineArgs[1]);
+                                break;
+                            case "GENE_LENGTH":
+                                genesLength.setValue(lineArgs[1]);
+                                break;
+                            case "MIN_MUTATIONS":
+                                minMutations.setValue(lineArgs[1]);
+                                break;
+                            case "MAX_MUTATIONS":
+                                maxMutations.setValue(lineArgs[1]);
+                                break;
+                            case "DELAY":
+                                dayLength.setValue(lineArgs[1]);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                } catch (FileNotFoundException e) {
+                    System.out.println(e.getMessage());
+                }
+
+            }
+        });
+
 
 
         dayLength = new IntInput("Dlugosc dnia (ms)");
         generalSettings.add(dayLength.generateInput(), 0, 2, 1, 1);
 
-        startButton = new Button("START");
+        Button startButton = new Button("START");
+        GridPane.setHalignment(startButton, HPos.CENTER);
+        generalSettings.add(startButton, 1, 2, 1, 1);
 
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -241,8 +322,6 @@ public class SettingsGUI extends Application {
             }
         });
 
-        generalSettings.add(startButton, 1, 2, 1, 1);
-        GridPane.setHalignment(startButton, HPos.CENTER);
 
 
         settingsContainer.getChildren().add(generalSettings);
