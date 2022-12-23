@@ -332,7 +332,9 @@ public class SettingsGUI extends Application {
 
         primaryStage.setScene(settingsScene);
         primaryStage.setTitle(titleText);
-        primaryStage.show();
+//        primaryStage.show();
+        loadFileButton.fire();
+        startButton.fire();
     }
 
     private boolean checkInputs() throws Exception  {

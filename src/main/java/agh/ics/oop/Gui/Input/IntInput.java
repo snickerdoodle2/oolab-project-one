@@ -44,7 +44,6 @@ public class IntInput {
     }
 
     public void setValue(String value) {
-        System.out.println(value);
         input.setText(value);
     }
 

@@ -3,14 +3,17 @@ package agh.ics.oop.Animal;
 import agh.ics.oop.Genes.CorrectionGene;
 import agh.ics.oop.Genes.Gene;
 import agh.ics.oop.Genes.RandomGene;
+import agh.ics.oop.MapElements.MapElement;
 import agh.ics.oop.Maps.WorldMap;
 import agh.ics.oop.Utility.Directions;
+import agh.ics.oop.Utility.HSLColor;
 import agh.ics.oop.Utility.Options;
 import agh.ics.oop.Utility.Vector2D;
+import javafx.scene.paint.Color;
 
 import java.util.Random;
 
-public abstract class Animal {
+public abstract class Animal implements MapElement {
     private int energy;
     private Vector2D position;
     private final Gene genes;
@@ -85,5 +88,16 @@ public abstract class Animal {
 
     public Gene getGenes() {
         return genes;
+    }
+
+    private float getColorBrightness() {
+
+        return Math.min(((float) Math.max(2, energy-30) / 100), 1);
+    }
+
+    @Override
+    public String getColor() {
+        Color color = Color.hsb(24, 1, getColorBrightness());
+        return HSLColor.convertToHex(color);
     }
 }

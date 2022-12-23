@@ -4,6 +4,7 @@ import agh.ics.oop.Animal.Animal;
 import agh.ics.oop.Animal.AnimalTypesList;
 import agh.ics.oop.Animal.CrazyAnimal;
 import agh.ics.oop.Animal.ObedientAnimal;
+import agh.ics.oop.MapElements.MapElement;
 import agh.ics.oop.MapElements.Plant;
 import agh.ics.oop.Plants.EquatorPlant;
 import agh.ics.oop.Plants.PlantGenerator;
@@ -39,6 +40,15 @@ public abstract class WorldMap {
     private int animalsAlive = 0;
     private int day = 0;
 
+    private MapElement getObject(Vector2D position){
+        MapElement animal = null;
+        if (animalAt(position)) {
+            animal = animals.get(position).last();
+        }
+        if (animal != null) return animal;
+        return plants.get(position);
+    }
+
 
     public WorldMap(Options options){
         this.options = options;
@@ -73,13 +83,16 @@ public abstract class WorldMap {
         for (int x = 0; x < this.width; x++){
             for (int y = 0; y < this.height; y++){
                 Pane pane = new Pane();
-                pane.setStyle("-fx-background-color: " + this.plantGenerator.getCellBgColor(new Vector2D(x, y)));
-                if (plantAt(new Vector2D(x, y))){
-                    pane.setStyle("-fx-background-color: red");
+                MapElement mapElement = getObject(new Vector2D(x, y));
+                if (mapElement == null) {
+                    pane.setStyle("-fx-background-color: " + this.plantGenerator.getCellBgColor(new Vector2D(x, y)));
+                } else {
+                    pane.setStyle("-fx-background-color: " + mapElement.getColor());
                 }
-                if (animalAt(new Vector2D(x, y))){
-                    pane.setStyle("-fx-background-color: blue");
-                }
+
+
+
+
                 GridPane.setHalignment(pane, HPos.CENTER);
                 grid.add(pane, x, y, 1, 1);
             }
@@ -92,9 +105,15 @@ public abstract class WorldMap {
             grid.getColumnConstraints().add(new ColumnConstraints(widthPixelSize));
         }
 
-        for (int y = 0; y <= this.height; y++){
+        for (int y = 0; y < this.height; y++){
             grid.getRowConstraints().add(new RowConstraints(heightPixelSize));
         }
+
+        grid.setStyle("-fx-border-width: 3;" +
+                "-fx-border-color: " + switch (this.options.mapType) {
+            case EARTH -> "#82AAE3";
+            case PORTALS -> "#F07DEA";
+        });
         return grid;
     }
 

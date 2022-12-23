@@ -39,6 +39,6 @@ public class ToxicPlant extends PlantGenerator{
 
     @Override
     public String getCellBgColor(Vector2D position) {
-        return null;
+        return "#FAD6A5";
     }
 }

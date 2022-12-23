@@ -57,8 +57,8 @@ public class EquatorPlant extends PlantGenerator {
 
     @Override
     public String getCellBgColor(Vector2D position) {
-        if (isInEquator(position)) return "green";
-        return "white";
+        if (isInEquator(position)) return "#61764B";
+        return "#FAD6A5";
     }
 
     /**
