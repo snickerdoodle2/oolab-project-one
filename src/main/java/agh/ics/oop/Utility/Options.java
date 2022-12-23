@@ -29,4 +29,7 @@ public class Options {
     public int geneLength;
     public int minMutations;
     public int maxMutations;
+
+//    OTHER
+    public int delay;
 }

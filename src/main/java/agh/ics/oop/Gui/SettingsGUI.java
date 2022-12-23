@@ -17,9 +17,11 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -31,7 +33,7 @@ public class SettingsGUI extends Application {
 
     private static final ColumnConstraints columnWidth = new ColumnConstraints(appWidth/2-appPadding);
 
-
+    private Text errorMessage = new Text();
     private static final String titleText = "Gra o Ewolucji";
     private IntInput genesLength;
     private IntInput minMutations;
@@ -202,16 +204,39 @@ public class SettingsGUI extends Application {
         startButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                errorMessage.setText("");
                 try {
-                    checkInputs();
-                    System.out.println(mapType.getValue());
-                    System.out.println(plantType.getValue());
-                    System.out.println(animalType.getValue());
-                    System.out.println(geneType.getValue());
-                } catch (NumberFormatException e) {
-                    System.out.println(e.getMessage());
-                } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    if (!checkInputs()) {
+                        errorMessage.setText("Sprawdz poprawonosc wprowadzonych danych");
+                        return;
+                    };
+                    Options options = new Options();
+                    options.mapHeight = mapHeight.getValue();
+                    options.mapWidth = mapWidth.getValue();
+                    options.mapType = MapTypeList.fromString(mapType.getValue());
+
+                    options.plantType = PlantGeneratorsList.fromString(plantType.getValue());
+                    options.initialPlants = plantAmount.getValue();
+                    options.plantsPerDay = plantPerDay.getValue();
+                    options.energyPerPlant = energyPerPlant.getValue();
+
+                    options.animalType = AnimalTypesList.fromString(animalType.getValue());
+                    options.minToBreed = minToBreed.getValue();
+                    options.initialAnimals = animalAmount.getValue();
+                    options.initialEnergy = startingAnimalEnergy.getValue();
+                    options.energyToBreed = energyToBreed.getValue();
+
+                    options.geneType = GeneTypesList.fromString(geneType.getValue());
+                    options.geneLength = genesLength.getValue();
+                    options.minMutations = minMutations.getValue();
+                    options.maxMutations = maxMutations.getValue();
+
+                    options.delay = dayLength.getValue();
+
+
+                    newGame(options);
+                } catch (Exception e) {
+                    errorMessage.setText("Uzupelnij wszystkie pola");
                 }
             }
         });
@@ -222,12 +247,16 @@ public class SettingsGUI extends Application {
 
         settingsContainer.getChildren().add(generalSettings);
 
+        errorMessage.setFill(Color.RED);
+        settingsContainer.getChildren().add(errorMessage);
+
+
         primaryStage.setScene(settingsScene);
         primaryStage.setTitle(titleText);
         primaryStage.show();
     }
 
-    private boolean checkInputs() throws NumberFormatException, Exception  {
+    private boolean checkInputs() throws Exception  {
         if (mapWidth.getValue() <= 0) return false;
         if (mapHeight.getValue() <= 0) return false;
 
@@ -239,12 +268,13 @@ public class SettingsGUI extends Application {
         if (startingAnimalEnergy.getValue() <= 0) return false;
         if (minToBreed.getValue() <= 0) return false;
         if (energyToBreed.getValue() <= 0) return false;
-        if (minToBreed.getValue() >= energyToBreed.getValue() ) return false;
+        if (minToBreed.getValue() <= energyToBreed.getValue() ) return false;
 
         if (genesLength.getValue() <= 0) return false;
         if (minMutations.getValue() < 0) return false;
         if (maxMutations.getValue() < 0) return false;
         if (minMutations.getValue() > maxMutations.getValue()) return false;
+        if (minMutations.getValue() > genesLength.getValue() || maxMutations.getValue() > genesLength.getValue()) return false;
 
         if (dayLength.getValue() <= 0) return false;
 

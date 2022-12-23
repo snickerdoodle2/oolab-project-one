@@ -60,7 +60,10 @@ public class GameGUI implements IMapObserver {
     }
     public Scene getScene() {
 
-        map = new EarthMap(gameOptions);
+        map = switch (gameOptions.mapType) {
+            case EARTH -> new EarthMap(gameOptions);
+            case PORTALS -> null;
+        };
         mapPane.setAlignment(Pos.CENTER);
 
         VBox leftColumn = generateColumn();
@@ -73,7 +76,7 @@ public class GameGUI implements IMapObserver {
         container.getChildren().setAll(leftColumn, mapPane, rightColumn);
         container.setSpacing(24);
 
-        engineThread = new Thread(new SimulationEngine(map, 100, this));
+        engineThread = new Thread(new SimulationEngine(map, gameOptions.delay, this));
 
         engineThread.start();
 

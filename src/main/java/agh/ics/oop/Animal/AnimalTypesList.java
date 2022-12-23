@@ -11,4 +11,12 @@ public enum AnimalTypesList {
             case OBEDIENT -> "Pelna predestynacja";
         };
     }
+
+    public static AnimalTypesList fromString(String input){
+        return switch (input) {
+            case "Nieco szalenstwa" -> CRAZY;
+            case "Pelna predestynacja" -> OBEDIENT;
+            default -> null;
+        };
+    }
 }

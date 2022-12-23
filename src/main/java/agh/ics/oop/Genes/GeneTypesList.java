@@ -12,4 +12,12 @@ public enum GeneTypesList {
             case CORRECTION -> "Lekka Korekta";
         };
     }
+
+    public static GeneTypesList fromString(String input){
+        return switch (input) {
+            case "Pelna Losowosc" -> RANDOM;
+            case "Lekka Korekta" -> CORRECTION;
+            default -> null;
+        };
+    }
 }

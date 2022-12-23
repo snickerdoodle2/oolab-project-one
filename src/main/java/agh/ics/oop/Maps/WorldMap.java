@@ -44,7 +44,7 @@ public abstract class WorldMap {
 
         this.animalType = options.animalType;
         this.plantGenerator = switch (options.plantType) {
-            case EQUATOR -> new EquatorPlant(this, 5 );
+            case EQUATOR -> new EquatorPlant(this, options.mapHeight/10 );
             case TOXIC -> null;
         };
         this.energyPerPlant = options.energyPerPlant;
@@ -140,6 +140,9 @@ public abstract class WorldMap {
         for (int i = 0; i < options.initialAnimals; i++ ){
             newAnimal();
         }
+        for (int i =0; i < options.initialPlants; i++){
+            generatePlant();
+        }
     }
 
     public void moveAnimal(Animal animal, Directions direction){
@@ -193,12 +196,12 @@ public abstract class WorldMap {
                         case OBEDIENT -> new ObedientAnimal(options, this, parent1, parent2);
                         case CRAZY -> new CrazyAnimal(options, this, parent1, parent2);
                     };
+                    parent1.breed(options.energyToBreed);
+                    parent2.breed(options.energyToBreed);
+
                     addAnimal(kid);
                     this.animalsAlive++;
                 }
-
-                parent1.breed(options.energyToBreed);
-                parent2.breed(options.energyToBreed);
 
                 animalList.add(parent1);
                 animalList.add(parent2);
@@ -219,7 +222,9 @@ public abstract class WorldMap {
         commendMove();
         commendEat();
         commendBreed();
-        generatePlant();
+        for (int i = 0; i < options.plantsPerDay; i++) {
+            generatePlant();
+        }
         decrementEnergy();
         this.day++;
         return this.animalsAlive == 0;
