@@ -15,6 +15,8 @@ import java.util.Random;
 
 public abstract class Animal implements MapElement {
     private int energy;
+
+    private int age;
     private Vector2D position;
     private final Gene genes;
     private final WorldMap map;
@@ -59,6 +61,8 @@ public abstract class Animal implements MapElement {
         this.map.moveAnimal(this, Directions.values()[curGene]);
     }
 
+    public void incrementAge() {this.age++;}
+
     public void decrementEnergy() {
         this.energy--;
     }
@@ -93,6 +97,10 @@ public abstract class Animal implements MapElement {
     private float getColorBrightness() {
 
         return Math.min(((float) Math.max(2, energy-30) / 100), 1);
+    }
+
+    public int getAge() {
+        return age;
     }
 
     @Override

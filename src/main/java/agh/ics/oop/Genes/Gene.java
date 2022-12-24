@@ -3,7 +3,7 @@ package agh.ics.oop.Genes;
 import agh.ics.oop.Animal.Animal;
 import agh.ics.oop.Utility.Options;
 
-import java.util.Arrays;
+
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -82,5 +82,15 @@ public abstract class Gene {
 
     public int getGene(int i) {
         return genes[i % this.length];
+    }
+
+    @Override
+    public String toString() {
+        String out = "";
+        for (int gene : genes) {
+            out += gene;
+        }
+
+        return out;
     }
 }

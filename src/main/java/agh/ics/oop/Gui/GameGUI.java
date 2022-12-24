@@ -1,15 +1,12 @@
 package agh.ics.oop.Gui;
 
-import agh.ics.oop.Animal.AnimalTypesList;
 import agh.ics.oop.Engine.SimulationEngine;
 
-import agh.ics.oop.Genes.GeneTypesList;
 import agh.ics.oop.Gui.Legend.Legend;
 import agh.ics.oop.Gui.Legend.LegendIcon;
 import agh.ics.oop.Gui.Legend.LegendItem;
 
 import agh.ics.oop.Maps.EarthMap;
-import agh.ics.oop.Maps.MapTypeList;
 import agh.ics.oop.Maps.PortalsMap;
 import agh.ics.oop.Maps.WorldMap;
 
@@ -23,6 +20,7 @@ import javafx.application.Platform;
 import javafx.geometry.Pos;
 
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -38,11 +36,13 @@ public class GameGUI implements IMapObserver {
 
     private final VBox mapPane = new VBox();
 
+    private final VBox info = new VBox();
+
     private Thread engineThread;
 
     private WorldMap map;
 
-//    TODO: LEGENDA
+    private boolean paused = false;
     private List<LegendItem> legendItems = new ArrayList<>();
 
     public GameGUI(Options gameOptions) {
@@ -51,9 +51,9 @@ public class GameGUI implements IMapObserver {
 
     private VBox generateColumn() {
         VBox myVBox = new VBox();
-        myVBox.setMaxWidth(windowsWidth/4);
         myVBox.setMinWidth(windowsWidth/4);
-        myVBox.setStyle("-fx-background-color: pink");
+        myVBox.setStyle("-fx-padding: 32;");
+        myVBox.setSpacing(32);
 
         return myVBox;
     }
@@ -71,25 +71,40 @@ public class GameGUI implements IMapObserver {
             case PORTALS -> new PortalsMap(gameOptions);
         };
         mapPane.setAlignment(Pos.CENTER);
-        Region leftSpacer = new Region();
-        Region rightSpacer = new Region();
-
-        HBox.setHgrow(leftSpacer, Priority.ALWAYS);
-        HBox.setHgrow(rightSpacer, Priority.ALWAYS);
 
         VBox legend = Legend.generateLegend(legendItems);
         legend.setAlignment(Pos.CENTER);
 
         VBox leftColumn = generateColumn();
-        leftColumn.getChildren().setAll(legend);
-        VBox rightColumn = generateColumn();
 
+        HBox.setHgrow(leftColumn, Priority.ALWAYS);
+
+        VBox moreOptions = new VBox();
+
+
+        Button pauseButton = new Button("PAUZA");
+        pauseButton.setOnAction(event -> {
+                if (paused){
+                    engineThread.resume();
+                } else {
+                    engineThread.suspend();
+                }
+                paused = !paused;
+
+        });
+        VBox.setVgrow(info, Priority.ALWAYS);
+
+        moreOptions.getChildren().addAll(info, pauseButton);
+        moreOptions.setAlignment(Pos.BOTTOM_CENTER);
+        VBox.setVgrow(moreOptions, Priority.ALWAYS);
+
+        leftColumn.getChildren().setAll(moreOptions, legend);
 
         HBox container = new HBox();
 
 
         container.setStyle("-fx-padding: 32");
-        container.getChildren().setAll(leftColumn, leftSpacer, mapPane, rightSpacer, rightColumn);
+        container.getChildren().setAll(leftColumn, mapPane);
         container.setSpacing(24);
 
         engineThread = new Thread(new SimulationEngine(map, gameOptions.delay, this));
@@ -107,13 +122,23 @@ public class GameGUI implements IMapObserver {
     @Override
     public void rerender() {
         Platform.runLater(() -> {
-            mapPane.getChildren().setAll(map.toGridPane(500));
+            mapPane.getChildren().setAll(map.toGridPane(windowsHeight-64));
+            info.getChildren().setAll(
+                    new Label("Dzien nr " + map.getDay()),
+                    new Label("Liczba zwierzat: " + map.getAnimalsAlive()),
+                    new Label("Liczba roslin: " + map.getNumberOfPlants()),
+                    new Label("Liczba wolnych pol: " + map.getEmptyCells()),
+                    new Label("Najpopularniejszy gen: " +map.getMostCommonGene()),
+                    new Label("Srednia energia zyjacych zwierzat: " + map.getAverageEnergy()),
+                    new Label("Srednia dlugosc zycia martwych zwierzat: " + map.getAverageAge())
+            );
         });
     }
 
+    @Override
     public void threadFinished() {
         Platform.runLater(() -> {
-            System.out.println("KONIEC:)");
+            System.out.println("KONIEC :)");
         });
     }
 }

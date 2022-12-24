@@ -16,15 +16,15 @@
 
 1. - [x] Sekcja symulacji ma wyświetlać animację pokazującą pozycje zwierząt, ich energię w dowolnej formie (np. koloru lub paska zdrowia) oraz pozycje roślin - i ich zmiany.
 
-1. - [ ] Program musi umożliwiać zatrzymywanie oraz wznawianie animacji w dowolnym momencie (niezależnie dla każdej mapy - patrz niżej).
+1. - [x] Program musi umożliwiać zatrzymywanie oraz wznawianie animacji w dowolnym momencie (niezależnie dla każdej mapy - patrz niżej).
 
 1. Program ma pozwalać na śledzenie następujących statystyk dla aktualnej sytuacji w symulacji:
-	- [ ] liczby wszystkich zwierząt,
-	- [ ] liczby wszystkich roślin,
-	- [ ] liczby wolnych pól,
-	- [ ] najpopularniejszych genotypów,
-	- [ ] średniego poziomu energii dla żyjących zwierząt,
-	- [ ] średniej długości życia zwierząt dla martwych zwierząt (wartość uwzględnia wszystkie nieżyjące zwierzęta - od początku symulacji),
+	- [x] liczby wszystkich zwierząt,
+	- [x] liczby wszystkich roślin,
+	- [x] liczby wolnych pól,
+	- [x] najpopularniejszych genotypów,
+	- [x] średniego poziomu energii dla żyjących zwierząt,
+	- [x] średniej długości życia zwierząt dla martwych zwierząt (wartość uwzględnia wszystkie nieżyjące zwierzęta - od początku symulacji),
 
 1. - [ ] Jeżeli zdecydowano się na to w momencie uruchamiania symulacji, to jej statystyki powinny być zapisywane (każdego dnia) do pliku CSV. Plik ten powinnien być "otwieralny" przez dowolny rozujmiejący ten format program (np. MS Excel).
 

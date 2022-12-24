@@ -273,8 +273,6 @@ public class SettingsGUI extends Application {
             }
         });
 
-
-
         dayLength = new IntInput("Dlugosc dnia (ms)");
         generalSettings.add(dayLength.generateInput(), 0, 2, 1, 1);
 
@@ -332,9 +330,7 @@ public class SettingsGUI extends Application {
 
         primaryStage.setScene(settingsScene);
         primaryStage.setTitle(titleText);
-//        primaryStage.show();
-        loadFileButton.fire();
-        startButton.fire();
+        primaryStage.show();
     }
 
     private boolean checkInputs() throws Exception  {

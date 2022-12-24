@@ -19,6 +19,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.RowConstraints;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 public abstract class WorldMap {
@@ -26,6 +28,7 @@ public abstract class WorldMap {
     protected final int height;
     private final PlantGenerator plantGenerator;
     private final int energyPerPlant;
+
 
     private final AnimalTypesList animalType;
     private final Options options;
@@ -38,9 +41,17 @@ public abstract class WorldMap {
 
 
     private int animalsAlive = 0;
+
+    private int numberOfPlants = 0;
     private int day = 0;
 
-    private MapElement getObject(Vector2D position){
+    private List<Integer> deadAnimalsAge = new ArrayList<>();
+
+    private List<Integer> aliveAnimalsEnergy = new ArrayList<>();
+
+    private List<String> genes = new ArrayList<>();
+
+    private MapElement getObject(Vector2D position) {
         MapElement animal = null;
         if (animalAt(position)) {
             animal = animals.get(position).last();
@@ -50,12 +61,12 @@ public abstract class WorldMap {
     }
 
 
-    public WorldMap(Options options){
+    public WorldMap(Options options) {
         this.options = options;
         this.width = options.mapWidth;
         this.height = options.mapHeight;
 
-        for (int i = 0; i < this.width; i++){
+        for (int i = 0; i < this.width; i++) {
             for (int j = 0; j < this.height; j++) {
                 deadAnimalsMap.put(new Vector2D(i, j), 0);
             }
@@ -63,7 +74,7 @@ public abstract class WorldMap {
 
         this.animalType = options.animalType;
         this.plantGenerator = switch (options.plantType) {
-            case EQUATOR -> new EquatorPlant(this, options.mapHeight/10 );
+            case EQUATOR -> new EquatorPlant(this, options.mapHeight / 10);
             case TOXIC -> new ToxicPlant(this);
         };
         this.energyPerPlant = options.energyPerPlant;
@@ -80,8 +91,8 @@ public abstract class WorldMap {
     public GridPane toGridPane(int mapSize) {
 
         GridPane grid = new GridPane();
-        for (int x = 0; x < this.width; x++){
-            for (int y = 0; y < this.height; y++){
+        for (int x = 0; x < this.width; x++) {
+            for (int y = 0; y < this.height; y++) {
                 Pane pane = new Pane();
                 MapElement mapElement = getObject(new Vector2D(x, y));
                 if (mapElement == null) {
@@ -89,8 +100,6 @@ public abstract class WorldMap {
                 } else {
                     pane.setStyle("-fx-background-color: " + mapElement.getColor());
                 }
-
-
 
 
                 GridPane.setHalignment(pane, HPos.CENTER);
@@ -105,7 +114,7 @@ public abstract class WorldMap {
             grid.getColumnConstraints().add(new ColumnConstraints(widthPixelSize));
         }
 
-        for (int y = 0; y < this.height; y++){
+        for (int y = 0; y < this.height; y++) {
             grid.getRowConstraints().add(new RowConstraints(heightPixelSize));
         }
 
@@ -120,20 +129,22 @@ public abstract class WorldMap {
     public boolean plantAt(Vector2D position) {
         return this.plants.containsKey(position);
     }
+
     private boolean animalAt(Vector2D position) {
         TreeSet<Animal> tmp = this.animals.get(position);
-        if (tmp == null ) return false;
+        if (tmp == null) return false;
         return tmp.size() > 0;
     }
 
-    private void generatePlant(){
+    private void generatePlant() {
         Vector2D position = this.plantGenerator.generatePlant();
         this.plants.put(position, new Plant(position));
+        numberOfPlants++;
     }
 
     protected abstract Vector2D calculateNewPosition(Vector2D position, Directions direction);
 
-    private void newAnimal(){
+    private void newAnimal() {
         Animal animal = switch (animalType) {
             case OBEDIENT -> new ObedientAnimal(options, this);
             case CRAZY -> new CrazyAnimal(options, this);
@@ -165,15 +176,15 @@ public abstract class WorldMap {
     }
 
     public void init() {
-        for (int i = 0; i < options.initialAnimals; i++ ){
+        for (int i = 0; i < options.initialAnimals; i++) {
             newAnimal();
         }
-        for (int i =0; i < options.initialPlants; i++){
+        for (int i = 0; i < options.initialPlants; i++) {
             generatePlant();
         }
     }
 
-    public void moveAnimal(Animal animal, Directions direction){
+    public void moveAnimal(Animal animal, Directions direction) {
         Vector2D newPosition = this.calculateNewPosition(animal.getPosition(), direction);
         TreeSet<Animal> animalsList = animals.get(animal.getPosition());
         animalsList.remove(animal);
@@ -182,13 +193,14 @@ public abstract class WorldMap {
     }
 
     private void removeDead() {
-        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
-            for (Animal animal : new ArrayList<>(animalList)){
+        for (TreeSet<Animal> animalList : new ArrayList<>(animals.values())) {
+            for (Animal animal : new ArrayList<>(animalList)) {
                 if (animal.isDead()) {
                     TreeSet<Animal> animalsList = animals.get(animal.getPosition());
                     animalsList.remove(animal);
                     Integer field = deadAnimalsMap.getOrDefault(animal.getPosition(), 0);
-                    deadAnimalsMap.put(animal.getPosition(), field.intValue()+1);
+                    deadAnimalsAge.add(animal.getAge());
+                    deadAnimalsMap.put(animal.getPosition(), field.intValue() + 1);
                     this.animalsAlive--;
                 }
             }
@@ -196,18 +208,23 @@ public abstract class WorldMap {
     }
 
     private void commendMove() {
-        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
-            for (Animal animal : new ArrayList<>(animalList)){
+        aliveAnimalsEnergy.clear();
+        genes.clear();
+        for (TreeSet<Animal> animalList : new ArrayList<>(animals.values())) {
+            for (Animal animal : new ArrayList<>(animalList)) {
+                aliveAnimalsEnergy.add(animal.getEnergy());
+                genes.add(animal.getGenes().toString());
                 animal.move();
             }
         }
     }
 
     private void commendEat() {
-        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
-            if (animalList.size() > 0){
+        for (TreeSet<Animal> animalList : new ArrayList<>(animals.values())) {
+            if (animalList.size() > 0) {
                 Animal animal = animalList.last();
                 if (plantAt(animal.getPosition())) {
+                    numberOfPlants--;
                     animal.eat(energyPerPlant);
                     plants.remove(animal.getPosition());
                 }
@@ -216,12 +233,12 @@ public abstract class WorldMap {
     }
 
     private void commendBreed() {
-        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
+        for (TreeSet<Animal> animalList : new ArrayList<>(animals.values())) {
             if (animalList.size() >= 2) {
                 Animal parent1 = animalList.pollLast();
                 Animal parent2 = animalList.pollLast();
 
-                if (parent1.getEnergy() >= options.minToBreed && parent2.getEnergy() >= options.minToBreed){
+                if (parent1.getEnergy() >= options.minToBreed && parent2.getEnergy() >= options.minToBreed) {
                     Animal kid = switch (animalType) {
                         case OBEDIENT -> new ObedientAnimal(options, this, parent1, parent2);
                         case CRAZY -> new CrazyAnimal(options, this, parent1, parent2);
@@ -240,9 +257,17 @@ public abstract class WorldMap {
     }
 
     private void decrementEnergy() {
-        for (TreeSet<Animal> animalList: new ArrayList<>(animals.values())) {
-            for (Animal animal : new ArrayList<>(animalList)){
+        for (TreeSet<Animal> animalList : new ArrayList<>(animals.values())) {
+            for (Animal animal : new ArrayList<>(animalList)) {
                 animal.decrementEnergy();
+            }
+        }
+    }
+
+    private void incrementAge() {
+        for (TreeSet<Animal> animalList : new ArrayList<>(animals.values())) {
+            for (Animal animal : new ArrayList<>(animalList)) {
+                animal.incrementAge();
             }
         }
     }
@@ -255,6 +280,7 @@ public abstract class WorldMap {
         for (int i = 0; i < options.plantsPerDay; i++) {
             generatePlant();
         }
+        incrementAge();
         decrementEnergy();
         this.day++;
         return this.animalsAlive == 0;
@@ -262,5 +288,50 @@ public abstract class WorldMap {
 
     public Map<Vector2D, Integer> getDeadAnimalsMap() {
         return deadAnimalsMap;
+    }
+
+    public int getAnimalsAlive() {
+        return animalsAlive;
+    }
+
+    public int getNumberOfPlants() {
+        return numberOfPlants;
+    }
+
+    public int getDay() {
+        return day;
+    }
+
+    public double getAverageAge() {
+        return Math.round(deadAnimalsAge.stream().mapToDouble(e -> e).average().orElse(0)*100) / 100.0;
+    }
+
+    public double getAverageEnergy() {
+        return Math.round(aliveAnimalsEnergy.stream().mapToDouble(e -> e).average().orElse(0) * 100) / 100.0;
+    }
+
+    public int getEmptyCells() {
+        int sum = 0;
+        for (int x = 0; x < this.width; x++) {
+            for (int y = 0; y < this.height; y++) {
+                if (!animalAt(new Vector2D(x, y))) sum++;
+            }
+        }
+        return sum;
+    }
+
+    public String getMostCommonGene(){
+        Optional<Map.Entry<String, Long>> mostCommonOpt = genes.stream()
+                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+                .entrySet()
+                .stream()
+                .max(Map.Entry.comparingByValue());
+
+        if (mostCommonOpt.isPresent()) {
+            Map.Entry<String, Long> mostCommon = mostCommonOpt.get();
+
+            return mostCommon.getKey() + " x " + mostCommon.getValue();
+        }
+        return "O-O";
     }
 }
