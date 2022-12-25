@@ -3,6 +3,9 @@ package agh.ics.oop.Plants;
 import agh.ics.oop.Maps.WorldMap;
 import agh.ics.oop.Utility.Vector2D;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class EquatorPlant extends PlantGenerator {
 
     private Vector2D equatorLL;
@@ -29,30 +32,36 @@ public class EquatorPlant extends PlantGenerator {
     @Override
     protected Vector2D generatePreferred() {
 //            TODO: Make plant generator inside equator better :D
-        Vector2D tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(equatorUR.y-equatorLL.y+1)+equatorLL.y);
-        while (map.plantAt(tmp)){
-            tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(equatorUR.y-equatorLL.y+1)+equatorLL.y);
+        List<Vector2D> availableCells = new ArrayList<>();
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                Vector2D tmp = new Vector2D(x, y);
+                if (!map.plantAt(tmp) && isInEquator(tmp)) {
+                    availableCells.add(tmp);
+                }
+            }
         }
-        return tmp;
+        if (availableCells.size() == 0) {
+            return null;
+        }
+        return availableCells.get(random.nextInt(availableCells.size()));
     }
 
     @Override
     protected Vector2D generateDisPreferred() {
-        //            TODO: Make plant generator outside equator better :D
-        int up, down;
-        if (this.random.nextDouble() > .5) {
-            down = 0;
-            up = this.equatorLL.y;
-        } else {
-            down = this.equatorUR.y + 1;
-            up = this.map.getHeight() - 1;
+        List<Vector2D> availableCells = new ArrayList<>();
+        for (int x = 0; x < map.getWidth(); x++) {
+            for (int y = 0; y < map.getHeight(); y++) {
+                Vector2D tmp = new Vector2D(x, y);
+                if (!map.plantAt(tmp) && !isInEquator(tmp)) {
+                    availableCells.add(tmp);
+                }
+            }
         }
-        Vector2D tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(up - down+1) + down);
-
-        while (map.plantAt(tmp)){
-            tmp = new Vector2D(this.random.nextInt(this.map.getWidth()), this.random.nextInt(up - down+1) + down);
+        if (availableCells.size() == 0) {
+            return null;
         }
-        return tmp;
+        return availableCells.get(random.nextInt(availableCells.size()));
     }
 
     @Override

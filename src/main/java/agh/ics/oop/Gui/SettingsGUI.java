@@ -195,7 +195,10 @@ public class SettingsGUI extends Application {
         GridPane.setHalignment(generalTitle, HPos.CENTER);
         generalSettings.add(generalTitle, 0, 0, 2, 1);
 
-//        TODO: LOAD FILE WITH SETTINGS
+        File f = new File("src/main/resources/presets/");
+        Dropdown files = new Dropdown(f.list(), "Pliki");
+        generalSettings.add(files.generateInput(), 0, 1, 1, 1);
+
         Button loadFileButton = new Button("ZALADUJ PLIK");
         GridPane.setHalignment(loadFileButton, HPos.CENTER);
         generalSettings.add(loadFileButton, 1, 1, 1, 1);
@@ -203,8 +206,10 @@ public class SettingsGUI extends Application {
         loadFileButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                String fileName = files.getValue();
+                if (fileName == null) return;
                 try {
-                    File presetFile = new File("src/main/resources/presets/preset_one");
+                    File presetFile = new File("src/main/resources/presets/" + fileName);
                     Scanner presetReader = new Scanner(presetFile);
                     while (presetReader.hasNextLine()) {
                         String line = presetReader.nextLine();

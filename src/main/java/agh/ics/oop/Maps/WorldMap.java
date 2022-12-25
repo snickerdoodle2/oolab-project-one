@@ -138,6 +138,7 @@ public abstract class WorldMap {
 
     private void generatePlant() {
         Vector2D position = this.plantGenerator.generatePlant();
+        if (position == null) return;
         this.plants.put(position, new Plant(position));
         numberOfPlants++;
     }
